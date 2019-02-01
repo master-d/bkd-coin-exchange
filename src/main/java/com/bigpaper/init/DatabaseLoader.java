@@ -15,6 +15,8 @@
  */
 package com.bigpaper.init;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,8 +26,12 @@ import org.springframework.stereotype.Component;
 
 import com.bigpaper.bo.Asset;
 import com.bigpaper.bo.AssetType;
+import com.bigpaper.bo.TradeType;
+import com.bigpaper.bo.UserTrade;
 import com.bigpaper.repos.AssetRepository;
 import com.bigpaper.repos.AssetTypeRepository;
+import com.bigpaper.repos.TradeTypeRepository;
+import com.bigpaper.repos.UserTradeRepository;
 
 /**
  * @author Rob Richards
@@ -36,9 +42,12 @@ public class DatabaseLoader implements CommandLineRunner {
 
 	@Autowired
 	private AssetRepository assetRepo;
-	
 	@Autowired
 	private AssetTypeRepository assetTypeRepo;
+	@Autowired
+	private TradeTypeRepository tradeTypeRepo;
+	@Autowired
+	private UserTradeRepository userTradeRepo;
 	
 
 
@@ -55,6 +64,25 @@ public class DatabaseLoader implements CommandLineRunner {
 			assetRepo.save(new Asset("COIN", "BKD Gold Coin"));
 			assetRepo.save(new Asset("COIN", "BKD Silver Coin"));
 		}
+		// check trade types
+		List<TradeType> tradeTypes = toList(tradeTypeRepo.findAll());
+		if (tradeTypes.size() == 0) {
+			tradeTypeRepo.save(new TradeType("BID"));
+			tradeTypeRepo.save(new TradeType("ASK"));
+		}
+		
+		// check trades
+		List<UserTrade> trades = toList(userTradeRepo.findAll());
+		if (trades.size() == 0) {
+			// save some random trades
+			for (int x=0; x<20; x++) {
+				UserTrade trade = new UserTrade("robr","ASK",1L,1L, 100*Math.random());
+				trade.setFillDate(LocalDateTime.now().minusMonths(x));
+				userTradeRepo.save(trade);
+				
+			}
+		}
+		
 	}
 	
 	private static final <T> List<T> toList(Iterable<T> iter) {

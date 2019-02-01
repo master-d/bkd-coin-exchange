@@ -2,7 +2,6 @@ package com.bigpaper.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
@@ -16,8 +15,8 @@ import com.bigpaper.bo.pk.UserAssetId;
 @IdClass(value=UserAssetId.class)
 public class UserAsset {
 
-	private @Id @Column(length=100,unique=true,nullable=false) String userName;
-	private @Id @GeneratedValue @Column(unique=true,nullable=false) Long assetId;
+	private @Id @Column(length=100,unique=false,nullable=false) String userName;
+	private @Id @Column(unique=false,nullable=false) Long assetId;
 	private @Column(unique=false,nullable=false) Long quantity;
 
 	public UserAsset() {}

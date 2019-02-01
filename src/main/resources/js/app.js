@@ -4,6 +4,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const client = require('./client');
+
+import ReactChartkick, { LineChart } from 'react-chartkick';
+import Chart from 'chart.js';
+ReactChartkick.addAdapter(Chart);
 // end::vars[]
 
 // tag::app[]
@@ -18,11 +22,22 @@ class App extends React.Component {
 		client({method: 'GET', path: '/api/assets'}).done(response => {
 			this.setState({assets: response.entity._embedded.assets});
 		});
+		client({method: 'GET', path: '/api/userTrades'}).done(response => {
+			var chartdata = [];
+			var trades = response.entity._embedded.userTrades;
+			for (var x=0; x<trades.length; x++) {
+				chartdata.push([new Date(trades[x].fillDate),trades[x].value]);
+			}
+			this.setState({trades: chartdata});
+		});
 	}
 
 	render() {
 		return (
-			<AssetList assets={this.state.assets}/>
+			<div>
+				<AssetList assets={this.state.assets}/>
+				<LineChart curve={false} data={this.state.trades} />" +
+			</div>
 		)
 	}
 }
@@ -35,16 +50,9 @@ class AssetList extends React.Component{
 			<Asset key={asset._links.self.href} asset={asset}/>
 		);
 		return (
-			<table>
-				<tbody>
-					<tr>
-						<th>Id</th>
-						<th>Name</th>
-						<th>Description</th>
-					</tr>
-					{assets}
-				</tbody>
-			</table>
+				<span>
+			{assets}
+				</span>
 		)
 	}
 }
@@ -54,11 +62,7 @@ class AssetList extends React.Component{
 class Asset extends React.Component{
 	render() {
 		return (
-			<tr>
-				<td>{this.props.asset.id}</td>
-				<td>{this.props.asset.name}</td>
-				<td>{this.props.asset.description}</td>
-			</tr>
+			<button id={this.props.asset.id}>{this.props.asset.name}</button> 
 		)
 	}
 }
