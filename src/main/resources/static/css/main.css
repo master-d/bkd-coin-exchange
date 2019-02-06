@@ -1,9 +1,49 @@
-table {
-    border-collapse: collapse;
+body, html {
+ background: #222;
+}
+#main {
+ background-image: linear-gradient(to bottom,black,#333);
+ box-shadow: 1px 1px 2px #CCC;
+ border: 1px solid black;
+ border-radius: 5px;
+ color: white;
+}
+#chart {
+ padding-top: 5px;
+}
+#navbar {
+ padding: 2px;
+ border-bottom: 1px dotted #333;
+}
+#navbar ul {
+ margin: 0;
+ padding: 0;
+}
+#navbar ul li {
+ display: inline-block;
+ padding: 5px;
+ border-radius: 3px;
+}
+#navbar ul li:HOVER {
+ background: #333;
+}
+#navbar ul li a, #navbar ul li a:VISITED {
+ color: #CCC;
+ text-decoration: none;
+}
+#navbar ul li.selected {
+ background: #333;
 }
 
-td, th {
-    border: 1px solid #999;
-    padding: 0.5rem;
-    text-align: left;
+.icon-links {
+ font-size: 2rem;
+}
+.icon-links a, .icon-links a:VISITED {
+ color: #333;
+}
+.icon-links a:HOVER {
+ color: white;
+}
+icon-links a.selected {
+ color: #66F;
 }

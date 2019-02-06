@@ -14,10 +14,12 @@ public class User {
 
 	private @Id @Column(length=25,unique=true,nullable=false) String userName;
 	private @Column(length=100,unique=true,nullable=false) String password;
+	private @Column(length=100,unique=true,nullable=false) String salt;
 	
 	private @Column(length=25,unique=false,nullable=true) String firstName;
 	private @Column(length=25,unique=false,nullable=true) String lastName;
 	private @Column(length=50,unique=true,nullable=false) String email;
+	private @Column(length=50,unique=true,nullable=false) Long phone;
 
 	public User() {}
 
@@ -65,6 +67,22 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public Long getPhone() {
+		return phone;
+	}
+
+	public void setPhone(Long phone) {
+		this.phone = phone;
 	}
 }
 // end::code[]

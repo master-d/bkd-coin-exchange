@@ -15,6 +15,7 @@
  */
 package com.bigpaper.init;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -57,12 +58,14 @@ public class DatabaseLoader implements CommandLineRunner {
 		List<AssetType> assetTypes = toList(assetTypeRepo.findAll());
 		if (assetTypes.size() == 0) {
 			assetTypeRepo.save(new AssetType("COIN"));
+			assetTypeRepo.save(new AssetType("CASE"));
 		}
 		// check assets
 		List<Asset> assets = toList(assetRepo.findAll());
 		if (assets.size() == 0) {
 			assetRepo.save(new Asset("COIN", "BKD Gold Coin"));
 			assetRepo.save(new Asset("COIN", "BKD Silver Coin"));
+			assetRepo.save(new Asset("CASE", "BKD Plastic Case"));
 		}
 		// check trade types
 		List<TradeType> tradeTypes = toList(tradeTypeRepo.findAll());
@@ -76,7 +79,7 @@ public class DatabaseLoader implements CommandLineRunner {
 		if (trades.size() == 0) {
 			// save some random trades
 			for (int x=0; x<20; x++) {
-				UserTrade trade = new UserTrade("robr","ASK",1L,1L, 100*Math.random());
+				UserTrade trade = new UserTrade("robr","ASK",1L,1L, new BigDecimal(100*Math.random()));
 				trade.setFillDate(LocalDateTime.now().minusMonths(x));
 				userTradeRepo.save(trade);
 				

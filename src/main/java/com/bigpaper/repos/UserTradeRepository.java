@@ -14,5 +14,7 @@ import com.bigpaper.bo.UserTrade;
 public interface UserTradeRepository extends CrudRepository<UserTrade, Long> {
 
 	public List<UserTrade> findByFillDateGreaterThan(LocalDateTime date);
+	public List<UserTrade> findByAssetIdAndFillDateIsNotNull(Long assetId);
+
 }
 // end::code[]

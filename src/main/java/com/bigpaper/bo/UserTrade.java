@@ -1,5 +1,6 @@
 package com.bigpaper.bo;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -19,13 +20,13 @@ public class UserTrade {
 	private @Column(length=10,unique=false,nullable=false) String tradeTypeId;
 	private @Column(unique=false,nullable=false) Long assetId;
 	private @Column(unique=false,nullable=false) Long quantity;
-	private @Column(scale=2, unique=false,nullable=false) Double value;
+	private @Column(precision=16,scale=2,unique=false,nullable=false) BigDecimal value;
 	private @Column(unique=false,nullable=false) LocalDateTime postDate;
 	private @Column(unique=false,nullable=true)  LocalDateTime fillDate;
 
 	public UserTrade() {}
 
-	public UserTrade(String userName, String tradeTypeId, Long assetId, Long quantity, Double value) {
+	public UserTrade(String userName, String tradeTypeId, Long assetId, Long quantity, BigDecimal value) {
 		this.userName = userName;
 		this.tradeTypeId = tradeTypeId;
 		this.assetId = assetId;
@@ -74,11 +75,11 @@ public class UserTrade {
 		this.quantity = quantity;
 	}
 
-	public Double getValue() {
+	public BigDecimal getValue() {
 		return value;
 	}
 
-	public void setValue(Double value) {
+	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
 

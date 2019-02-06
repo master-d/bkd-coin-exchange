@@ -5,7 +5,10 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * @author Rob Richards
@@ -14,7 +17,10 @@ import javax.persistence.Id;
 @Entity
 public class Message {
 
-	private @Id @GeneratedValue @Column(unique=true,nullable=false) Long id;
+	private @Id 
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="native")
+	@GenericGenerator(name="native", strategy="native")
+	@Column(unique=true,nullable=false) Long id;
 	private @Column(length=100, unique=false,nullable=false) String fromUser;
 	private @Column(length=100, unique=false,nullable=false) String toUser;
 	private @Column(length=100, unique=false,nullable=false) String subject;

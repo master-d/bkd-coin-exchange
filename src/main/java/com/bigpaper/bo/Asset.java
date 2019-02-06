@@ -4,7 +4,10 @@ package com.bigpaper.bo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * @author Rob Richards
@@ -13,7 +16,10 @@ import javax.persistence.Id;
 @Entity
 public class Asset {
 
-	private @Id @GeneratedValue @Column(unique=true,nullable=false) Long id;
+	private @Id 
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="native")
+	@GenericGenerator(name="native", strategy="native")
+	@Column(unique=true,nullable=false) Long id;
 	private @Column(length=10,unique=false,nullable=false) String typeId;
 	private @Column(unique=false,nullable=false) String name;
 	private @Column(unique=false,nullable=true) String description;
