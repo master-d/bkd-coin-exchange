@@ -11,27 +11,24 @@ body, html {
 #chart {
  padding-top: 5px;
 }
-#navbar {
+.navlist {
  padding: 2px;
  border-bottom: 1px dotted #333;
-}
-#navbar ul {
  margin: 0;
- padding: 0;
 }
-#navbar ul li {
+.navlist li {
  display: inline-block;
  padding: 5px;
  border-radius: 3px;
 }
-#navbar ul li:HOVER {
+.navlist li:HOVER {
  background: #333;
 }
-#navbar ul li a, #navbar ul li a:VISITED {
+.navlist li a, .navlist li a:VISITED {
  color: #CCC;
  text-decoration: none;
 }
-#navbar ul li.selected {
+.navlist li.selected {
  background: #333;
 }
 

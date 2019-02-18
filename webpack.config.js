@@ -16,11 +16,22 @@ module.exports = {
                 exclude: /(node_modules)/,
                 use: [{
                     loader: 'babel-loader',
-                    options: {
-                        presets: ["@babel/preset-env", "@babel/preset-react"]
-                    }
+                    	query: {
+                    		presets: ['@babel/react'],
+                    		plugins: [
+                    			'@babel/plugin-syntax-dynamic-import',
+                    			'@babel/plugin-syntax-import-meta',
+                    			['@babel/plugin-proposal-class-properties', { "loose": false }],
+                    			'@babel/plugin-proposal-json-strings'
+                    		]
+                    	}
                 }]
             }
         ]
     }
 };
+/*
+options: {
+presets: ["@babel/preset-env", "@babel/preset-react"]
+}
+*/
