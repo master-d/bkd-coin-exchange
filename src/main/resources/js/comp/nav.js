@@ -1,27 +1,29 @@
-import React, {useState, useEffect} from 'react';
-//import React from 'react';
+import React, {useState, useEffect, useContext, createContext} from 'react';
 import { FaBitcoin, FaComments, FaCommentsDollar, FaDollarSign, FaChartLine } from 'react-icons/fa';
 
-const useSelectedNavIdx = () => {
-	const [selectedIdx, setSelectedIdx] = useState(0);
-	
-	return [ selectedIdx, setSelectedIdx ];
-}
+export const SelectedNavCtx = createContext([0, () => {}, () => {}]);
+const iconMap = { "chart": (<FaChartLine/>), "bidaskform": (<FaBitcoin/>) };
+
 const NavList = (props) => {
+	const [selectedIdx, setSelectedIdx] = useState(0);
 	return(
-		<ul className="navlist" {...props}></ul>
+		<SelectedNavCtx.Provider value={[selectedIdx,setSelectedIdx,props.onNavClick]}>
+			<ul className={props.className || "navlist"} {...props}></ul>
+		</SelectedNavCtx.Provider>
 	)
 };
 
 const NavItem = (props) => {
-	const [selectedIdx, setSelectedIdx] = useSelectedNavIdx(null);
-
+	const [selectedIdx, setSelectedIdx, parentNavClick] = useContext(SelectedNavCtx);
 	const handleNavItemClick = (e) => {
+		e.preventDefault();
 		setSelectedIdx(props.idx);
+		parentNavClick(props);
 	}
 	return(
-		<li>
-			<a href="#" onClick={handleNavItemClick} className={ props.idx == selectedIdx ? "selected" : null}>
+		<li onClick={handleNavItemClick} className={ props.idx == selectedIdx ? "selected" : null}>
+			<a href="#">
+				{iconMap[props.icon]}
 				{props.item}
 			</a>
 		</li>

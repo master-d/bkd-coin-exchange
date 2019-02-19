@@ -20,17 +20,18 @@ class App extends React.Component {
 		this.state = {
 			assets: [], 
 			trades: [],
-			actions: [ "chart", "bidask" ],
-			events: { actionClick: this.onActionClick, assetClick: this.onAssetClick }
+			icons: [ "chart", "bidaskform" ],
 		};
-		this.onActionClick = this.onActionClick.bind(this);
-		this.onAssetClick = this.onAssetClick.bind(this);
 	}
-	onActionClick() {
-		console.log("action click");
-	}
-	onAssetClick() {
-		console.log("asset click");
+	
+	handleNavClick(item) {
+		console.log("nav click:" + JSON.stringify(item));
+		if (item.icon) {
+			for (var x=0; x<this.state.icons.length; x++) {
+				var disp = item.icon == this.state.icons[x] ? "block" : "none";
+				document.getElementById(this.state.icons[x]).style.display = disp;
+			}
+		}
 	}
 // /api/userTrades/search/findByAssetIdAndFillDateIsNotNull
 	componentDidMount() {
@@ -47,20 +48,23 @@ class App extends React.Component {
 
 	render() {
 		const navItems = this.state.assets.map((asset, idx) =>
-			<NavItem idx={idx} item={asset.name} />
+			<NavItem idx={idx} item={asset.name} id={asset.id} />
+		);
+		const navIcons = this.state.icons.map((icon, idx) =>
+			<NavItem idx={idx} icon={icon} id={icon} />
 		);
 		return (
 			<div id="main">
-				<NavList>
+				<NavList onNavClick={this.handleNavClick.bind(this)}>
 					{navItems}
-					<NavList style={{ float: "right"}}>
-					
+					<NavList className="icon-links" onNavClick={this.handleNavClick.bind(this)}>
+					{navIcons}
 					</NavList>
 				</NavList>
 				<div id="chart">
 					<LineChart curve={false} data={this.state.trades} />
 				</div>
-				<div id="bidask" style={{display: "none"}}>
+				<div id="bidaskform" style={{display: "none"}}>
 					<BidAskForm assets={this.state.assets}/>
 				</div>
 			</div>

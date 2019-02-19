@@ -24,15 +24,17 @@ body, html {
 .navlist li:HOVER {
  background: #333;
 }
-.navlist li a, .navlist li a:VISITED {
+.navlist>li a, .navlist>li a:VISITED {
  color: #CCC;
  text-decoration: none;
 }
-.navlist li.selected {
+.navlist>li.selected {
  background: #333;
+ color: white;
 }
 
 .icon-links {
+ float: right;
  font-size: 2rem;
 }
 .icon-links a, .icon-links a:VISITED {
@@ -41,6 +43,6 @@ body, html {
 .icon-links a:HOVER {
  color: white;
 }
-icon-links a.selected {
+.icon-links li.selected {
  color: #66F;
 }
