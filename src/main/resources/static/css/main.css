@@ -1,48 +1,46 @@
 body, html {
- background: #222;
+ background: #444;
 }
 #main {
+}
+.container {
+ padding: 10px;
  background-image: linear-gradient(to bottom,black,#333);
- box-shadow: 1px 1px 2px #CCC;
- border: 1px solid black;
- border-radius: 5px;
- color: white;
+ min-height: 300px;
 }
-#chart {
- padding-top: 5px;
-}
+
 .navlist {
- padding: 2px;
- border-bottom: 1px dotted #333;
- margin: 0;
+ margin: 0px;
+ padding: 0px;
 }
 .navlist li {
  display: inline-block;
+ margin: 0px 5px;
  padding: 5px;
- border-radius: 3px;
+ border: 1px solid black;
 }
-.navlist li:HOVER {
- background: #333;
+.navlist.tab-top li {
+ border-radius: 5px 5px 0px 0px;
+ background: linear-gradient(to bottom, #45484D 22%, #000 100%);
 }
-.navlist>li a, .navlist>li a:VISITED {
+.navlist.tab-bottom li {
+ border-radius: 0px 0px 5px 5px;
+ background: linear-gradient(to top, #45484D 22%, #000 100%);
+}
+
+.navlist li a, .navlist li a:VISITED {
  color: #CCC;
  text-decoration: none;
 }
-.navlist>li.selected {
- background: #333;
+.navlist.tab-top li.selected {
+ background: linear-gradient(to bottom, #45664D 2%, #000 100%);
+}
+.navlist.tab-bottom li.selected {
+ background: linear-gradient(to top, #45664D 2%, #000 100%);
+}
+.navlist li.selected a {
  color: white;
 }
-
-.icon-links {
- float: right;
- font-size: 2rem;
-}
-.icon-links a, .icon-links a:VISITED {
- color: #333;
-}
-.icon-links a:HOVER {
- color: white;
-}
-.icon-links li.selected {
- color: #66F;
+.icon {
+ padding-right: 5px; 
 }

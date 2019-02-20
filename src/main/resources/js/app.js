@@ -20,16 +20,16 @@ class App extends React.Component {
 		this.state = {
 			assets: [], 
 			trades: [],
-			icons: [ "chart", "bidaskform" ],
+			tabs: [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" }],
 		};
 	}
 	
 	handleNavClick(item) {
 		console.log("nav click:" + JSON.stringify(item));
 		if (item.icon) {
-			for (var x=0; x<this.state.icons.length; x++) {
-				var disp = item.icon == this.state.icons[x] ? "block" : "none";
-				document.getElementById(this.state.icons[x]).style.display = disp;
+			for (var x=0; x<this.state.tabs.length; x++) {
+				var disp = item.icon == this.state.tabs[x].icon ? "block" : "none";
+				document.getElementById(this.state.tabs[x].icon).style.display = disp;
 			}
 		}
 	}
@@ -50,23 +50,27 @@ class App extends React.Component {
 		const navItems = this.state.assets.map((asset, idx) =>
 			<NavItem idx={idx} item={asset.name} id={asset.id} />
 		);
-		const navIcons = this.state.icons.map((icon, idx) =>
-			<NavItem idx={idx} icon={icon} id={icon} />
+		const navIcons = this.state.tabs.map((tab, idx) =>
+			<NavItem idx={idx} item={tab.text} icon={tab.icon} id={tab.icon} />
 		);
 		return (
 			<div id="main">
-				<NavList onNavClick={this.handleNavClick.bind(this)}>
-					{navItems}
-					<NavList className="icon-links" onNavClick={this.handleNavClick.bind(this)}>
-					{navIcons}
-					</NavList>
-				</NavList>
 				<div id="chart">
-					<LineChart curve={false} data={this.state.trades} />
+					<NavList className="navlist tab-top" onNavClick={this.handleNavClick.bind(this)}>
+						{navItems}
+					</NavList>
+					<div className="container">
+						<LineChart curve={false} data={this.state.trades} colors={[ "#0F0", "#AAA"]} prefix="$" 
+							/>
+					</div>
 				</div>
-				<div id="bidaskform" style={{display: "none"}}>
+				
+				<div id="bidaskform" className="container" style={{display: "none"}}>
 					<BidAskForm assets={this.state.assets}/>
 				</div>
+				<NavList className="navlist tab-bottom" onNavClick={this.handleNavClick.bind(this)}>
+					{navIcons}
+				</NavList>
 			</div>
 		)
 	}

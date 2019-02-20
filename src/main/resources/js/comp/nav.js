@@ -23,7 +23,7 @@ const NavItem = (props) => {
 	return(
 		<li onClick={handleNavItemClick} className={ props.idx == selectedIdx ? "selected" : null}>
 			<a href="#">
-				{iconMap[props.icon]}
+				<span className="icon">{iconMap[props.icon]}</span>
 				{props.item}
 			</a>
 		</li>
