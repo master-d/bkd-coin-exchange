@@ -15,6 +15,9 @@ public interface UserTradeRepository extends CrudRepository<UserTrade, Long> {
 
 	public List<UserTrade> findByFillDateGreaterThan(LocalDateTime date);
 	public List<UserTrade> findByAssetIdAndFillDateIsNotNull(Long assetId);
-
+	
+	public List<UserTrade> findByUserName(String userName);
+	public List<UserTrade> findByUserNameAndFillDateIsNull(String userName);
+	public List<UserTrade> findByUserNameAndFillDateIsNotNull(String userName);
 }
 // end::code[]
