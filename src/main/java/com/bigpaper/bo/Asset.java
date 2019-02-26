@@ -23,12 +23,19 @@ public class Asset {
 	private @Column(length=10,unique=false,nullable=false) String typeId;
 	private @Column(unique=false,nullable=false) String name;
 	private @Column(unique=false,nullable=true) String description;
+	private @Column(unique=false,nullable=true) String color;
+	private @Column(unique=false,nullable=true) String icon;
 	
 
 	public Asset() { }
 	public Asset(String typeId, String name) {
 		this.typeId = typeId;
 		this.name = name;
+	}
+	public Asset(String typeId, String name, String color) {
+		this.typeId = typeId;
+		this.name = name;
+		this.color = color;
 	}
 
 	public Long getId() {
@@ -61,6 +68,14 @@ public class Asset {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 }
 // end::code[]

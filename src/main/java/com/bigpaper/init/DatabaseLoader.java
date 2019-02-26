@@ -63,10 +63,15 @@ public class DatabaseLoader implements CommandLineRunner {
 		// check assets
 		List<Asset> assets = toList(assetRepo.findAll());
 		if (assets.size() == 0) {
-			assetRepo.save(new Asset("COIN", "BKD Gold Coin"));
-			assetRepo.save(new Asset("COIN", "BKD Silver Coin"));
-			assetRepo.save(new Asset("CASE", "BKD Plastic Case"));
-		}
+			assetRepo.save(new Asset("COIN", "BKD Gold Coin", "gold"));
+			assetRepo.save(new Asset("COIN", "BKD Silver Coin", "silver"));
+			assetRepo.save(new Asset("CASE", "BKD Plastic Case", "white"));
+		} else {
+/*			assetRepo.deleteAll();
+			assetRepo.save(new Asset("COIN", "BKD Gold Coin", "gold"));
+			assetRepo.save(new Asset("COIN", "BKD Silver Coin", "silver"));
+			assetRepo.save(new Asset("CASE", "BKD Plastic Case", "white"));
+*/		}
 		// check trade types
 		List<TradeType> tradeTypes = toList(tradeTypeRepo.findAll());
 		if (tradeTypes.size() == 0) {

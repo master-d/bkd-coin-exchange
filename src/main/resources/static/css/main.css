@@ -1,11 +1,18 @@
 body, html {
- background: #101;
- background-image:url("./img/bkd-coin-typeset.jpg");
- background-repeat: no-repeat;
- background-attachment: fixed;
- background-position: center 10%;
+ background: black;
 }
 #main {
+}
+.content {
+ background-image:url("./img/bkd-coin-typeset.jpg");
+ background-repeat: no-repeat;
+ background-position: center 25%;
+}
+.dark {
+ color: white;
+}
+.right {
+ float: right;
 }
 .container {
  padding: 10px;
@@ -13,6 +20,15 @@ body, html {
 /* background-image: linear-gradient(to bottom,black,#333); */
  background: rgba(0,0,0,.8);
  min-height: 400px;
+ border-radius: 5px;
+ border: 1px solid #333;
+}
+.navlist.buttonlist {
+ padding: 10px;
+}
+.navlist.buttonlist li {
+ background-image: linear-gradient(to top,black,#333); 
+ border: 1px solid #333;
  border-radius: 5px;
 }
 
@@ -24,15 +40,16 @@ body, html {
  display: inline-block;
  margin: 0px 5px;
  padding: 5px;
- border: 1px solid black;
 }
 .navlist.tab-top li {
  border-radius: 5px 5px 0px 0px;
  background: linear-gradient(to bottom, #45484D 22%, #000 100%);
+ border: 1px solid black;
 }
 .navlist.tab-bottom li {
  border-radius: 0px 0px 5px 5px;
  background: linear-gradient(to top, #45484D 22%, #000 100%);
+ border: 1px solid black;
 }
 
 .navlist li a, .navlist li a:VISITED {
@@ -48,6 +65,7 @@ body, html {
 .navlist li.selected a {
  color: white;
 }
+
 .icon {
  padding-right: 5px; 
 }
@@ -60,7 +78,7 @@ table.std thead tr {
 }
 .scrollable {
  display: inline-block;
- border: 1px solid white;
+ border: 1px solid #333;
  max-height: 156px;
  overflow-y: scroll;
 }

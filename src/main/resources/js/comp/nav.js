@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext, createContext} from 'react';
-import { FaBitcoin, FaComments, FaCommentsDollar, FaDollarSign, FaChartLine } from 'react-icons/fa';
+import { FaBitcoin, FaComments, FaCommentsDollar, FaDollarSign, FaCoins, FaEnvelope, FaChartLine } from 'react-icons/fa';
 
 export const SelectedNavCtx = createContext([0, () => {}, () => {}]);
-const iconMap = { "chart": (<FaChartLine/>), "bidaskform": (<FaBitcoin/>) };
+const iconMap = { "chart": (<FaChartLine/>), "bidaskform": (<FaBitcoin/>), "COIN": (<FaCoins/>), "CASE": (<FaEnvelope/>) };
 
 const NavList = (props) => {
 	const [selectedIdx, setSelectedIdx] = useState(0);
@@ -22,7 +22,7 @@ const NavItem = (props) => {
 	}
 	return(
 		<li onClick={handleNavItemClick} className={ props.idx == selectedIdx ? "selected" : null}>
-			<a href="#">
+			<a href="#" style={{ color: props.color }}>
 				<span className="icon">{iconMap[props.icon]}</span>
 				{props.item}
 			</a>

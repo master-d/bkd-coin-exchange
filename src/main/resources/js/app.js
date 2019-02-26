@@ -1,9 +1,9 @@
 'use strict';
 
-// tag::vars[]
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React, { useState, useEffect } from 'react';
+import ReactDOM  from 'react-dom';
 const client = require('./client');
+
 
 import NavList, { NavItem } from './comp/nav.js';
 import BidAskForm from './comp/bidask-form.js';
@@ -11,69 +11,79 @@ import BidAskForm from './comp/bidask-form.js';
 import ReactChartkick, { LineChart } from 'react-chartkick';
 import Chart from 'chart.js';
 ReactChartkick.addAdapter(Chart);
-// end::vars[]
 
-// tag::app[]
-class App extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			assets: [], 
-			trades: [],
-			tabs: [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" }],
-		};
-	}
+const App = () => {
+
+	const [assets, setAssets] = useState([]);
+	const [selectedAsset, setSelectedAsset] = useState(null);
+	const [trades, setTrades] = useState([]);
 	
-	handleNavClick(item) {
-		console.log("nav click:" + JSON.stringify(item));
-		if (item.icon) {
-			for (var x=0; x<this.state.tabs.length; x++) {
-				var disp = item.icon == this.state.tabs[x].icon ? "block" : "none";
-				document.getElementById(this.state.tabs[x].icon).style.display = disp;
+	const tabs = [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" }];
+	const assetUrl = "/api/assets";
+	const tradesUrl = "/api/userTrades/search/findByAssetIdAndFillDateIsNotNull?assetId=";
+	// /api/userTrades/search/findByAssetIdAndFillDateIsNotNull
+
+	useEffect(() => {
+		client({method: 'GET', path: assetUrl}).then(response => {
+			const data = response.entity._embedded.assets;
+			setAssets(data);
+			if (data.length) {
+				setSelectedAsset(data[0]);
 			}
+		});
+	}, [assetUrl]);
+	
+	useEffect(() => {
+		if (selectedAsset) {
+			client({method: 'GET',
+					path: tradesUrl + selectedAsset.id
+			}).then(response => {
+				var chartdata = response.entity._embedded.userTrades;
+				setTrades(chartdata.map(t => [new Date(t.fillDate),t.value]));
+			});
+		}
+	}, [selectedAsset]);
+		
+	function handleNavClick(item) {
+		console.log(item.type + " click:" + JSON.stringify(item));
+		if (item.type == "tab") {
+			for (var x=0; x<tabs.length; x++) {
+				var disp = item.icon == tabs[x].icon ? "block" : "none";
+				document.getElementById(tabs[x].icon).style.display = disp;
+			}
+		} else if (item.type == "asset") {
+			setSelectedAsset(assets.find(x => x.id == item.id));
 		}
 	}
-// /api/userTrades/search/findByAssetIdAndFillDateIsNotNull
-	componentDidMount() {
-		client({method: 'GET', path: '/api/assets'}).then(response => {
-			this.setState({assets: response.entity._embedded.assets});
-		});
-		client({method: 'GET'
-			,path: '/api/userTrades/search/findByAssetIdAndFillDateIsNotNull?assetId=1'
-		}).then(response => {
-			var trades = response.entity._embedded.userTrades;
-			this.setState({trades: trades.map(t => [new Date(t.fillDate),t.value]) });
-		});
-	}
 
-	render() {
-		const navItems = this.state.assets.map((asset, idx) =>
-			<NavItem idx={idx} item={asset.name} id={asset.id} />
-		);
-		const navIcons = this.state.tabs.map((tab, idx) =>
-			<NavItem idx={idx} item={tab.text} icon={tab.icon} id={tab.icon} />
-		);
-		return (
-			<div id="main">
-				<div id="chart">
-					<NavList className="navlist tab-top" onNavClick={this.handleNavClick.bind(this)}>
-						{navItems}
-					</NavList>
-					<div className="container">
-						<LineChart curve={false} data={this.state.trades} colors={[ "#0F0", "#AAA"]} prefix="$" 
-							/>
-					</div>
-				</div>
-				
-				<BidAskForm assets={this.state.assets}/>
-				
-				<NavList className="navlist tab-bottom" onNavClick={this.handleNavClick.bind(this)}>
-					{navIcons}
+	const navAssets = assets.map((asset, idx) =>
+		<NavItem type="asset" idx={idx} icon={asset.typeId} id={asset.id} color={asset.color} />
+	);
+	const navTabs = tabs.map((tab, idx) =>
+		<NavItem type="tab" idx={idx} item={tab.text} icon={tab.icon} id={tab.icon} />
+	);
+	return (
+		<div id="main" className="dark">
+			<h1>BKD Coin Exchange</h1>
+			<div className="content">
+			<div id="chart">
+				<NavList className="navlist buttonlist right" onNavClick={handleNavClick}>
+					{navAssets}
 				</NavList>
+				<div className="container">
+					<LineChart curve={false} data={trades} colors={[ "#0F0", "#AAA"]} prefix="$" />
+				</div>
 			</div>
-		)
-	}
+			
+			<BidAskForm assets={assets}/>
+			
+			<NavList className="navlist tab-bottom" onNavClick={handleNavClick}>
+				{navTabs}
+			</NavList>
+		</div>
+		</div>
+	)
 }
 
 ReactDOM.render(
