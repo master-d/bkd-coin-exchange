@@ -1,5 +1,6 @@
 package com.bigpaper.repos;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,5 +20,9 @@ public interface UserTradeRepository extends CrudRepository<UserTrade, Long> {
 	public List<UserTrade> findByUserName(String userName);
 	public List<UserTrade> findByUserNameAndFillDateIsNull(String userName);
 	public List<UserTrade> findByUserNameAndFillDateIsNotNull(String userName);
+
+	public UserTrade findFirstByFillDateIsNullAndTradeTypeIdEqualsOrderByPrice(String tradeTypeId);
+	public List<UserTrade> findByFillDateIsNullAndTradeTypeIdEqualsAndPriceEqualsOrderByPostDate(String tradeTypeId, BigDecimal price);
+	
 }
 // end::code[]

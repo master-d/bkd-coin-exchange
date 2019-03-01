@@ -19,7 +19,8 @@ const App = () => {
 	const [selectedAsset, setSelectedAsset] = useState(null);
 	const [trades, setTrades] = useState([]);
 	
-	const tabs = [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" }];
+	const tabs = [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" },
+		{text: "Messages", icon: "messages"}];
 	const assetUrl = "/api/assets";
 	const tradesUrl = "/api/userTrades/search/findByAssetIdAndFillDateIsNotNull?assetId=";
 	// /api/userTrades/search/findByAssetIdAndFillDateIsNotNull
@@ -40,7 +41,7 @@ const App = () => {
 					path: tradesUrl + selectedAsset.id
 			}).then(response => {
 				var chartdata = response.entity._embedded.userTrades;
-				setTrades(chartdata.map(t => [new Date(t.fillDate),t.value]));
+				setTrades(chartdata.map(t => [new Date(t.fillDate),t.price]));
 			});
 		}
 	}, [selectedAsset]);

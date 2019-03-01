@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * @author Rob Richards
@@ -15,23 +18,28 @@ import javax.persistence.Id;
 @Entity
 public class UserTrade {
 
-	private @Id @GeneratedValue @Column(unique=true,nullable=false) Long id;
+	private @Id 
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="native")
+	@GenericGenerator(name="native", strategy="native")
+	@Column(unique=true,nullable=false) Long id;
 	private @Column(length=100,unique=false,nullable=false) String userName;
 	private @Column(length=10,unique=false,nullable=false) String tradeTypeId;
+	private @Column(length=10,unique=false,nullable=false) String orderTypeId;
 	private @Column(unique=false,nullable=false) Long assetId;
 	private @Column(unique=false,nullable=false) Long quantity;
-	private @Column(precision=16,scale=2,unique=false,nullable=false) BigDecimal value;
+	private @Column(precision=16,scale=2,unique=false,nullable=false) BigDecimal price;
 	private @Column(unique=false,nullable=false) LocalDateTime postDate;
 	private @Column(unique=false,nullable=true)  LocalDateTime fillDate;
 
 	public UserTrade() {}
 
-	public UserTrade(String userName, String tradeTypeId, Long assetId, Long quantity, BigDecimal value) {
+	public UserTrade(String userName, String tradeTypeId, String orderTypeId, Long assetId, Long quantity, BigDecimal price) {
 		this.userName = userName;
 		this.tradeTypeId = tradeTypeId;
+		this.orderTypeId = orderTypeId;
 		this.assetId = assetId;
 		this.quantity = quantity;
-		this.value = value;
+		this.price = price;
 		this.postDate = LocalDateTime.now();
 	}
 
@@ -58,7 +66,15 @@ public class UserTrade {
 	public void setTradeTypeId(String tradeTypeId) {
 		this.tradeTypeId = tradeTypeId;
 	}
-	
+
+	public String getOrderTypeId() {
+		return orderTypeId;
+	}
+
+	public void setOrderTypeId(String orderTypeId) {
+		this.orderTypeId = orderTypeId;
+	}
+
 	public Long getAssetId() {
 		return assetId;
 	}
@@ -75,12 +91,12 @@ public class UserTrade {
 		this.quantity = quantity;
 	}
 
-	public BigDecimal getValue() {
-		return value;
+	public BigDecimal getPrice() {
+		return price;
 	}
 
-	public void setValue(BigDecimal value) {
-		this.value = value;
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
 	public LocalDateTime getPostDate() {

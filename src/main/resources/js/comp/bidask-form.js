@@ -14,27 +14,88 @@ function useTradeTypes(getData, defaultData) {
 	}, [getData]);
 	return tradeTypes;
 }
+function useOrderTypes(getData, defaultData) {
+	const [orderTypes, setOrderTypes] = useState(defaultData);
+	
+	useEffect(() => {
+		client({method: 'GET', path: '/api/orderTypes'}).then(response => {
+			setOrderTypes(response.entity._embedded.orderTypes);
+		});
+	}, [getData]);
+	return orderTypes;
+}
 
 const BidAskForm = (props) => {
 	
-	function handleSubmit() {
+	const tradeTypes = useTradeTypes(null,[]);
+	const orderTypes = useOrderTypes(null,[]);
+	const [selectedOrderType, setSelectedOrderType] = useState("LIMIT");
+	const [errors, setErrors] = useState(null);
+	
+	function handleSubmit(e) {
+		e.preventDefault();
+		const fd = new FormData(e.target);
+		var data = {};
+		fd.forEach(function(value, key) {
+			data[key] = value;
+		});
+		fetch('/trades', { method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+		.then(response => response.json())
+		.then(response => {
+			console.log(JSON.stringify(response));
+			if (response.status == 200) {
+			} else {
+				setErrors(response);
+			}
+		});
+		/*
+		client({method: 'POST', path: '/trades', body: data}).then(response => {
+			console.log(JSON.stringify(response));
+			if (response.status == 200) {
+			} else {
+				setErrors(response);
+			}
+		});
+		*/
+	}
+	function orderTypeChange(e) {
+		var val = e.target.value;
+		setSelectedOrderType(val);
 	}
 	
-	const tradeTypes = useTradeTypes(null,[]);
+	const tradeOpts = tradeTypes.map((tt,idx) => 
+		<option key={tt._links.self.href} value={tt.id}>{tt.description}</option>
+	)
+	const orderOpts = orderTypes.map((ot,idx) => 
+		<option key={ot._links.self.href} value={ot.id}>{ot.description}</option>
+	)
 	const assets = props.assets.map((asset,idx) =>
 		<option key={asset._links.self.href} value={asset.id}>{asset.name}</option>
 	);
 		return (
 			<div id="bidaskform" className="container" style={{display: "none"}}>
 			<UserTrades />
+			<h4>Order</h4>
 			<form id="bidask-form" onSubmit={ handleSubmit }>
+				{errors && 
+					(<div className="errors">{errors.message}<br/><br/>{errors.trace}</div>)
+				}
 				<div>
-					<select name="asset_id">
-						<option value="">- Asset Type -</option>
+					<select name="tradeTypeId">
+						{tradeOpts}
+					</select>
+					<select name="assetId">
 						{assets}
 					</select>
-					<input type="number" placeholder="value" name="value" />
-					<input type="number" name="quantity" defaultValue="1"/>
+					<input type="number" placeholder="quantity" name="quantity" defaultValue="1" style={{width: "3em"}}/>
+					<select name="orderTypeId" onChange={orderTypeChange}>
+						{orderOpts}
+					</select>
+					{selectedOrderType != "MARKET" && 
+						(<input type="number" placeholder="price" name="price" style={{width: "5em"}}/>)}
+				</div>
+				<div class="div-buttons">
+					<button type="submit" class="button">Submit</button>
 				</div>
 			</form>
 			</div>

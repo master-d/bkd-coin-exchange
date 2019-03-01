@@ -9,20 +9,7 @@ const tradeOpts = [
 	{ val: "filled", text: "Filled Trades", url: "/api/userTrades/search/findByUserNameAndFillDateIsNotNull?userName="},
 	{ val: "all", text: "All", url: "/api/userTrades/search/findByUserName?userName="}
 ]
-/*
-function useUserTrades(url, userName, defaultData) {
-	const [userTrades, setUserTrades] = useState(defaultData);
-	
-	useEffect(() => {
-			client({method: 'GET'
-				,path: url + userName
-			}).then(response => {
-				setUserTrades(response.entity._embedded.userTrades);
-			});
-	}, [url, userName]);
-	return userTrades;
-}
-*/
+
 const UserTrades = (props) => {
 	const userName = 'robr';
 	//const trades = useUserTrades(tradeOpts[0].url, userName, []);
@@ -96,8 +83,8 @@ const TradeTr = (props) => {
 			<td>{t.tradeTypeId}</td>
 			<td>{t.assetId}</td>
 			<td>{t.quantity}</td>
-			<td>{t.value}</td>
-			<td><a href="#" style={{ color: "red" }}><FaTrashAlt /></a></td>
+			<td>{t.price}</td>
+			<td>{!t.fillDate && (<a href="#" style={{ color: "red" }}><FaTrashAlt /></a>)}</td>
 		</tr>
 	)
 }

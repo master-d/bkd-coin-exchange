@@ -27,10 +27,12 @@ import org.springframework.stereotype.Component;
 
 import com.bigpaper.bo.Asset;
 import com.bigpaper.bo.AssetType;
+import com.bigpaper.bo.OrderType;
 import com.bigpaper.bo.TradeType;
 import com.bigpaper.bo.UserTrade;
 import com.bigpaper.repos.AssetRepository;
 import com.bigpaper.repos.AssetTypeRepository;
+import com.bigpaper.repos.OrderTypeRepository;
 import com.bigpaper.repos.TradeTypeRepository;
 import com.bigpaper.repos.UserTradeRepository;
 
@@ -47,6 +49,8 @@ public class DatabaseLoader implements CommandLineRunner {
 	private AssetTypeRepository assetTypeRepo;
 	@Autowired
 	private TradeTypeRepository tradeTypeRepo;
+	@Autowired
+	private OrderTypeRepository orderTypeRepo;
 	@Autowired
 	private UserTradeRepository userTradeRepo;
 	
@@ -75,8 +79,14 @@ public class DatabaseLoader implements CommandLineRunner {
 		// check trade types
 		List<TradeType> tradeTypes = toList(tradeTypeRepo.findAll());
 		if (tradeTypes.size() == 0) {
-			tradeTypeRepo.save(new TradeType("BID"));
-			tradeTypeRepo.save(new TradeType("ASK"));
+			tradeTypeRepo.save(new TradeType("BID", "Buy"));
+			tradeTypeRepo.save(new TradeType("ASK", "Sell")); 
+		}
+		// check order types
+		List<OrderType> orderTypes = toList(orderTypeRepo.findAll());
+		if (orderTypes.size() == 0) {
+			orderTypeRepo.save(new OrderType("LIMIT", "Limit"));
+			orderTypeRepo.save(new OrderType("MARKET", "Market")); 
 		}
 		
 		// check trades
@@ -84,8 +94,8 @@ public class DatabaseLoader implements CommandLineRunner {
 		if (trades.size() == 0) {
 			// save some random trades
 			for (int x=0; x<20; x++) {
-				UserTrade trade = new UserTrade("robr","ASK",1L,1L, new BigDecimal(100*Math.random()));
-				trade.setFillDate(LocalDateTime.now().minusMonths(x));
+				UserTrade trade = new UserTrade("robr","ASK", "MARKET",1L,1L, new BigDecimal(100*Math.random()));
+				trade.setFillDate(LocalDateTime.now().minusMonths(x)); 
 				userTradeRepo.save(trade);
 				
 			}

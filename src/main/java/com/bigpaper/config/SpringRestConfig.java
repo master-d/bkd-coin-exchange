@@ -18,7 +18,8 @@ public class SpringRestConfig implements RepositoryRestConfigurer {
 				Message.class,
 				TradeType.class,
 				UserAsset.class,
-				UserTrade.class
+				UserTrade.class,
+				OrderType.class
 			});
 	}
 	

@@ -10,18 +10,18 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class TradeType {
+public class OrderType {
 
 	private @Id @Column(length=10,unique=true,nullable=false) String id;
 	private @Column(unique=false,nullable=true) String description;
 	
 
-	public TradeType() {}
+	public OrderType() {}
 
-	public TradeType(String id) {
+	public OrderType(String id) {
 		this.id = id;
 	}
-	public TradeType(String id, String description) {
+	public OrderType(String id, String description) {
 		this.id = id;
 		this.description = description;
 	}
