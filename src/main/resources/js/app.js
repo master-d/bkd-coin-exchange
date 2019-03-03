@@ -22,8 +22,7 @@ const App = () => {
 	const tabs = [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" },
 		{text: "Messages", icon: "messages"}];
 	const assetUrl = "/api/assets";
-	const tradesUrl = "/api/userTrades/search/findByAssetIdAndFillDateIsNotNull?assetId=";
-	// /api/userTrades/search/findByAssetIdAndFillDateIsNotNull
+	const tradesUrl = "/api/userTrades/search/findByAssetIdAndFillByTradeIdIsNotNullAndFillDateIsNotNull?assetId=";
 
 	useEffect(() => {
 		client({method: 'GET', path: assetUrl}).then(response => {
@@ -38,7 +37,7 @@ const App = () => {
 	useEffect(() => {
 		if (selectedAsset) {
 			client({method: 'GET',
-					path: tradesUrl + selectedAsset.id
+					path: tradesUrl + selectedAsset.id + "&tradeTypeId=ASK"
 			}).then(response => {
 				var chartdata = response.entity._embedded.userTrades;
 				setTrades(chartdata.map(t => [new Date(t.fillDate),t.price]));

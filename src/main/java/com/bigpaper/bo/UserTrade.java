@@ -29,6 +29,7 @@ public class UserTrade {
 	private @Column(unique=false,nullable=false) Long quantity;
 	private @Column(precision=16,scale=2,unique=false,nullable=false) BigDecimal price;
 	private @Column(unique=false,nullable=false) LocalDateTime postDate;
+	private @Column(unique=false,nullable=true)  Long fillByTradeId;
 	private @Column(unique=false,nullable=true)  LocalDateTime fillDate;
 
 	public UserTrade() {}
@@ -105,6 +106,14 @@ public class UserTrade {
 
 	public void setPostDate(LocalDateTime postDate) {
 		this.postDate = postDate;
+	}
+
+	public Long getFillByTradeId() {
+		return fillByTradeId;
+	}
+
+	public void setFillByTradeId(Long fillByTradeId) {
+		this.fillByTradeId = fillByTradeId;
 	}
 
 	public LocalDateTime getFillDate() {

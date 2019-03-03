@@ -37,6 +37,8 @@ const BidAskForm = (props) => {
 		const fd = new FormData(e.target);
 		var data = {};
 		fd.forEach(function(value, key) {
+			if (value.match(/^[0-9.]+$/))
+				value = +value;
 			data[key] = value;
 		});
 		fetch('/trades', { method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
@@ -87,12 +89,12 @@ const BidAskForm = (props) => {
 					<select name="assetId">
 						{assets}
 					</select>
-					<input type="number" placeholder="quantity" name="quantity" defaultValue="1" style={{width: "3em"}}/>
+					<input type="number" min="1" placeholder="quantity" name="quantity" defaultValue="1" style={{width: "3em"}}/>
 					<select name="orderTypeId" onChange={orderTypeChange}>
 						{orderOpts}
 					</select>
 					{selectedOrderType != "MARKET" && 
-						(<input type="number" placeholder="price" name="price" style={{width: "5em"}}/>)}
+						(<input type="number" min=".01" step=".01" placeholder="price" name="price" style={{width: "5em"}}/>)}
 				</div>
 				<div class="div-buttons">
 					<button type="submit" class="button">Submit</button>
