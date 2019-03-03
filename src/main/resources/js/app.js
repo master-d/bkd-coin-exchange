@@ -37,7 +37,7 @@ const App = () => {
 	useEffect(() => {
 		if (selectedAsset) {
 			client({method: 'GET',
-					path: tradesUrl + selectedAsset.id + "&tradeTypeId=ASK"
+					path: tradesUrl + selectedAsset.id
 			}).then(response => {
 				var chartdata = response.entity._embedded.userTrades;
 				setTrades(chartdata.map(t => [new Date(t.fillDate),t.price]));

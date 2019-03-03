@@ -56,7 +56,7 @@ public class TradeService {
 				// this is a market order that can't be filled right now throw exception
 				if ("MARKET".equals(trade.getOrderTypeId())) {
 					Asset a = assetRepo.findById(trade.getAssetId()).get();
-					throw new RuntimeException("Could not fill market order for " + trade.getQuantity() + " " + a.getDescription());
+					throw new RuntimeException("Could not fill market order for " + trade.getQuantity() + " " + a.getName());
 				} else {
 					// this is a limit order that can't be filled right now. save it
 					tradeRepo.save(trade);
@@ -77,9 +77,10 @@ public class TradeService {
 		List<UserTrade> asks = tradeRepo.findAllOpenAsksLessThanEqualPrice(assetId, price);
 		for (UserTrade ask: asks) {
 			System.out.println(matchqty + " + " + ask.getQuantity() + " <= " + quantity + " -> " + ((matchqty + ask.getQuantity()) <= quantity));
-			if ((matchqty + ask.getQuantity()) <= quantity)
+			if ((matchqty + ask.getQuantity()) <= quantity) {
 				matchqty += ask.getQuantity();
 				matches.add(ask);
+			}
 		}
 		if (!quantity.equals(matchqty))
 			matches.clear();
@@ -97,12 +98,15 @@ public class TradeService {
 		// get all trades at this price level
 		List<UserTrade> bids = tradeRepo.findAllOpenBidsGreaterThanEqualPrice(assetId, price);
 		for (UserTrade bid: bids) {
-			if ((matchqty + bid.getQuantity()) <= quantity)
+			System.out.println(matchqty + " + " + bid.getQuantity() + " <= " + quantity + " -> " + ((matchqty + bid.getQuantity()) <= quantity));
+			if ((matchqty + bid.getQuantity()) <= quantity) {
 				matchqty += bid.getQuantity();
 				matches.add(bid);
+			}
 		}
 		if (!quantity.equals(matchqty))
 			matches.clear();
+		System.out.println("returning " + matches.size() + " matches");
 		return matches;
 	}
 	
