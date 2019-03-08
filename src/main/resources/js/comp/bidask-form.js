@@ -31,9 +31,11 @@ const BidAskForm = (props) => {
 	const orderTypes = useOrderTypes(null,[]);
 	const [selectedOrderType, setSelectedOrderType] = useState("LIMIT");
 	const [errors, setErrors] = useState(null);
+	const [refreshTrades, setRefreshTrades] = useState(true);
 	
 	function handleSubmit(e) {
 		e.preventDefault();
+		setRefreshTrades(false);
 		const fd = new FormData(e.target);
 		var data = {};
 		fd.forEach(function(value, key) {
@@ -42,23 +44,16 @@ const BidAskForm = (props) => {
 			data[key] = value;
 		});
 		fetch('/trades', { method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
-		.then(response => response.json())
 		.then(response => {
-			console.log(JSON.stringify(response));
-			if (response.status == 200) {
-			} else {
-				setErrors(response);
-			}
+			if (response.ok)
+				return response.json();
+			else
+				throw Error(response);
+		}).then(response => {
+			setRefreshTrades(true);
+		}).catch(response => {
+			setErrors(response);
 		});
-		/*
-		client({method: 'POST', path: '/trades', body: data}).then(response => {
-			console.log(JSON.stringify(response));
-			if (response.status == 200) {
-			} else {
-				setErrors(response);
-			}
-		});
-		*/
 	}
 	function orderTypeChange(e) {
 		var val = e.target.value;
@@ -76,7 +71,7 @@ const BidAskForm = (props) => {
 	);
 		return (
 			<div id="bidaskform" className="container" style={{display: "none"}}>
-			<UserTrades />
+			<UserTrades refresh={refreshTrades}/>
 			<h4>Order</h4>
 			<form id="bidask-form" onSubmit={ handleSubmit }>
 				{errors && 

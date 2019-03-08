@@ -65,6 +65,11 @@ public class TradeService {
 		
 		return trade;
 	}
+
+	public void deleteTradeById(Long id) {
+		tradeRepo.deleteById(id);
+	}
+
 	public List<UserTrade> findOpenAsks(Long quantity, Long assetId) {
 		// null used for price in market orders
 		return findOpenAsks(quantity, assetId, null);

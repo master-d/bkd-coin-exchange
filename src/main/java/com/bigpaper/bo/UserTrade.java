@@ -33,7 +33,7 @@ public class UserTrade {
 	private @Column(unique=false,nullable=true)  LocalDateTime fillDate;
 
 	public UserTrade() {}
-
+	public UserTrade(Long id) { this.id = id; }
 	public UserTrade(String userName, String tradeTypeId, String orderTypeId, Long assetId, Long quantity, BigDecimal price) {
 		this.userName = userName;
 		this.tradeTypeId = tradeTypeId;
