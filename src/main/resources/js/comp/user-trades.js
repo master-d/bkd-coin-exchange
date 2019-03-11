@@ -5,18 +5,21 @@ import { FaTrashAlt } from 'react-icons/fa';
 import DateFmt from './date-fmt.js';
 
 const tradeOpts = [
-	{ val: "open", text: "Unfilled Trades", url: "/api/userTrades/search/findByUserNameAndFillDateIsNull?userName="}, 
-	{ val: "filled", text: "Filled Trades", url: "/api/userTrades/search/findByUserNameAndFillDateIsNotNull?userName="},
+	{ val: "open", text: "Unfilled Trades", url: "/api/userTrades/search/findByUserNameAndFillDateIsNullOrderByPostDateDesc?userName="}, 
+	{ val: "filled", text: "Filled Trades", url: "/api/userTrades/search/findByUserNameAndFillDateIsNotNullOrderByPostDateDesc?userName="},
 	{ val: "all", text: "All", url: "/api/userTrades/search/findByUserName?userName="}
 ]
 
 const UserTrades = (props) => {
 	const userName = 'robr';
 	//const trades = useUserTrades(tradeOpts[0].url, userName, []);
-	const [refreshTrades, setRefreshTrades] = useState(props.refresh);
+	const [refreshTrades, setRefreshTrades] = useState(true);
 	const [existingTradeType, setExistingTradeType] = useState(tradeOpts[0]);
 	const [userTrades, setUserTrades] = useState([]);
-	
+
+	if (props.refresh && !refreshTrades)
+		setRefreshTrades(true);
+
 	useEffect(() => {
 		if (refreshTrades) {
 			const url = existingTradeType.url;

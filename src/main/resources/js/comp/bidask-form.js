@@ -28,11 +28,30 @@ function useOrderTypes(getData, defaultData) {
 const BidAskForm = (props) => {
 	
 	const tradeTypes = useTradeTypes(null,[]);
+	const [selectedTradeType, setSelectedTradeType] = useState("ASK");
 	const orderTypes = useOrderTypes(null,[]);
 	const [selectedOrderType, setSelectedOrderType] = useState("LIMIT");
+	const [selectedAsset, setSelectedAsset] = useState(1);
 	const [errors, setErrors] = useState(null);
-	const [refreshTrades, setRefreshTrades] = useState(true);
+	const [refreshTrades, setRefreshTrades] = useState(false);
+	const [marketValue, setMarketValue] = useState({ price: "?"});
 	
+	useEffect(() => {
+		// go get the current market value and display it for the user
+		if (selectedOrderType == "MARKET") {
+			fetch('/trades/market/' + selectedTradeType + "/" + selectedAsset, { method: 'GET' })
+			.then(response => {
+				if (response.ok)
+					return response.json();
+				else
+					throw Error(response);
+			}).then(trade => {
+				setMarketValue(trade);
+			}).catch(response => {
+				setErrors(response);
+			});
+		}
+	}, [selectedAsset,selectedOrderType,selectedTradeType]);
 	function handleSubmit(e) {
 		e.preventDefault();
 		setRefreshTrades(false);
@@ -55,9 +74,18 @@ const BidAskForm = (props) => {
 			setErrors(response);
 		});
 	}
+	function tradeTypeChange(e) {
+		setSelectedTradeType(e.target.value);
+	}
+	function assetChange(e) {
+		setSelectedAsset(e.target.value);
+	}
 	function orderTypeChange(e) {
 		var val = e.target.value;
 		setSelectedOrderType(val);
+	}
+	function getCurrentMarketRate() {
+
 	}
 	
 	const tradeOpts = tradeTypes.map((tt,idx) => 
@@ -78,21 +106,21 @@ const BidAskForm = (props) => {
 					(<div className="errors">{errors.message}<br/><br/>{errors.trace}</div>)
 				}
 				<div>
-					<select name="tradeTypeId">
+					<select name="tradeTypeId" onChange={tradeTypeChange}>
 						{tradeOpts}
 					</select>
-					<select name="assetId">
+					<select name="assetId" onChange={assetChange}>
 						{assets}
 					</select>
 					<input type="number" min="1" placeholder="quantity" name="quantity" defaultValue="1" style={{width: "3em"}}/>
 					<select name="orderTypeId" onChange={orderTypeChange}>
 						{orderOpts}
 					</select>
-					{selectedOrderType != "MARKET" && 
+						{selectedOrderType == "MARKET" ? (<span> (current market price ${marketValue.price})</span>) : 
 						(<input type="number" min=".01" step=".01" placeholder="price" name="price" style={{width: "5em"}}/>)}
 				</div>
-				<div class="div-buttons">
-					<button type="submit" class="button">Submit</button>
+				<div className="div-buttons">
+					<button type="submit" className="button">Submit</button>
 				</div>
 			</form>
 			</div>
