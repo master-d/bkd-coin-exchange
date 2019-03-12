@@ -34,7 +34,7 @@ const BidAskForm = (props) => {
 	const [selectedAsset, setSelectedAsset] = useState(1);
 	const [errors, setErrors] = useState(null);
 	const [refreshTrades, setRefreshTrades] = useState(false);
-	const [marketValue, setMarketValue] = useState({ price: "?"});
+	const [marketValue, setMarketValue] = useState(null);
 	
 	useEffect(() => {
 		// go get the current market value and display it for the user
@@ -44,11 +44,12 @@ const BidAskForm = (props) => {
 				if (response.ok)
 					return response.json();
 				else
-					throw Error(response);
+					return response.json().then(err => { throw err });
 			}).then(trade => {
 				setMarketValue(trade);
-			}).catch(response => {
-				setErrors(response);
+			}).catch(err => {
+				setMarketValue(null);
+				setErrors(err);
 			});
 		}
 	}, [selectedAsset,selectedOrderType,selectedTradeType]);
@@ -116,7 +117,7 @@ const BidAskForm = (props) => {
 					<select name="orderTypeId" onChange={orderTypeChange}>
 						{orderOpts}
 					</select>
-						{selectedOrderType == "MARKET" ? (<span> (current market price ${marketValue.price})</span>) : 
+						{selectedOrderType == "MARKET" ? (<span>{marketValue ? " (market price $" + marketValue.price + ")" : ""}</span>) : 
 						(<input type="number" min=".01" step=".01" placeholder="price" name="price" style={{width: "5em"}}/>)}
 				</div>
 				<div className="div-buttons">

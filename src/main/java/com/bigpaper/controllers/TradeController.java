@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,12 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bigpaper.beans.ServerMessage;
 import com.bigpaper.bo.UserTrade;
+import com.bigpaper.exceptions.BkdCoinException;
 import com.bigpaper.repos.UserTradeRepository;
+import com.bigpaper.services.AssetService;
 import com.bigpaper.services.TradeService;
 
 /**
@@ -32,6 +32,8 @@ public class TradeController {
 	UserTradeRepository tradeRepo;
 	@Autowired
 	TradeService tradeService;
+	@Autowired
+	AssetService assetService;
 
 	@ResponseBody
 	@GetMapping(value="/trades/market/{tradeTypeId}/{assetId}")
@@ -45,7 +47,7 @@ public class TradeController {
 		if (trades.size() > 0)
 			return trades.get(0);
 		else
-			return null;
+			throw new BkdCoinException("No market value found for " + assetService.getAssetNameById(assetId) + "|" + tradeTypeId);
 	}
 	
 	@ResponseBody
@@ -60,9 +62,9 @@ public class TradeController {
 
 	
 	@DeleteMapping(value="/trades/{tradeId}", produces="application/json")
-	public ServerMessage<UserTrade> deleteTrade(@PathVariable Long tradeId) {
+	public ServerMessage deleteTrade(@PathVariable Long tradeId) {
 		tradeService.deleteTradeById(tradeId);
-		return new ServerMessage<>("Deleted trade (#" + tradeId + ")", new UserTrade(tradeId));
+		return new ServerMessage(tradeId, "Deleted trade (#" + tradeId + ")");
 	}
 	
 }
