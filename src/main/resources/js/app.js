@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import ReactDOM  from 'react-dom';
-const client = require('./client');
 
 
 import NavList, { NavItem } from './comp/nav.js';
@@ -19,28 +18,43 @@ const App = () => {
 	const [selectedAsset, setSelectedAsset] = useState(null);
 	const [trades, setTrades] = useState([]);
 	
-	const tabs = [ { text: "Chart", icon: "chart"} , { text: "Buy/Sell", icon: "bidaskform" },
-		{text: "Messages", icon: "messages"}];
+	const tabs = [ { text: "Chart", icon: "chart", key: "chart" },
+		{ text: "Buy/Sell", icon: "bidaskform", key: "bidaskform" },
+		{text: "Messages", icon: "messages", key: "messages" }];
 	const assetUrl = "/api/assets";
 	const tradesUrl = "/api/userTrades/search/findByAssetIdAndFillByTradeIdIsNotNullAndFillDateIsNotNull?assetId=";
 
 	useEffect(() => {
-		client({method: 'GET', path: assetUrl}).then(response => {
+		fetch(assetUrl, { method: 'GET', headers: {"Content-Type": "application/json"}})
+		.then(response => {
+			if (response.ok)
+				return response.json();
+			else
+				throw Error(response);
+		}).then(response => {
 			const data = response.entity._embedded.assets;
 			setAssets(data);
 			if (data.length) {
 				setSelectedAsset(data[0]);
 			}
+		}).catch(response => {
+			setErrors(response);
 		});
 	}, [assetUrl]);
 	
 	useEffect(() => {
 		if (selectedAsset) {
-			client({method: 'GET',
-					path: tradesUrl + selectedAsset.id
+			fetch(tradesUrl + selectedAsset.id, { method: 'GET', headers: {"Content-Type": "application/json"}})
+			.then(response => {
+				if (response.ok)
+					return response.json();
+				else
+					throw Error(response);
 			}).then(response => {
 				var chartdata = response.entity._embedded.userTrades;
 				setTrades(chartdata.map(t => [new Date(t.fillDate),t.price]));
+			}).catch(response => {
+				setErrors(response);
 			});
 		}
 	}, [selectedAsset]);
@@ -61,7 +75,7 @@ const App = () => {
 		<NavItem type="asset" idx={idx} icon={asset.typeId} id={asset.id} color={asset.color} />
 	);
 	const navTabs = tabs.map((tab, idx) =>
-		<NavItem type="tab" idx={idx} item={tab.text} icon={tab.icon} id={tab.icon} />
+		<NavItem type="tab" idx={idx} item={tab.text} icon={tab.icon} id={tab.icon} key={tab.key} />
 	);
 	return (
 		<div id="main" className="dark">

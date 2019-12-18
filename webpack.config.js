@@ -6,8 +6,19 @@ module.exports = {
     cache: true,
     mode: 'development',
     output: {
-        path: __dirname,
-        filename: './src/main/resources/static/built/bundle.js'
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'frontend_dist')
+    },
+    devServer: {
+        contentBase: './src/main/resources/static',
+        port: 8090,
+        hot: true,
+        watchContentBase: true,
+        "proxy": {
+            "/api": {
+              "target": "http://localhost:8080"
+            }
+          }        
     },
     module: {
         rules: [

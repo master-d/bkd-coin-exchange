@@ -1,4 +1,3 @@
-const client = require('../client');
 
 import React, {useState, useEffect, useContext, createContext} from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -23,12 +22,19 @@ const UserTrades = (props) => {
 	useEffect(() => {
 		if (refreshTrades) {
 			const url = existingTradeType.url;
-			client({method: 'GET'
-				,path: url + userName
-			}).then(response => {
-				setUserTrades(response.entity._embedded.userTrades);
+			fetch(url + userName, { method: 'GET', headers: {"Content-Type": "application/json"}})
+			.then(response => {
+				if (response.ok)
+					return response.json();
+				else
+					return response.json().then(err => { throw err });
+			}).then(userTrades => {
+				setUserTrades(userTrades);
 				setRefreshTrades(false);
-			});
+			}).catch(err => {
+				setUserTrades([]);
+				setErrors(err);
+			});	
 		}
 	}, [refreshTrades]);
 

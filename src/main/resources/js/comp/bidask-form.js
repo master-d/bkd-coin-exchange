@@ -1,4 +1,3 @@
-const client = require('../client');
 
 import React, {useState, useEffect, useContext, createContext} from 'react';
 import { FaBitcoin, FaComments, FaCommentsDollar, FaDollarSign, FaChartLine } from 'react-icons/fa';
@@ -8,9 +7,19 @@ function useTradeTypes(getData, defaultData) {
 	const [tradeTypes, setTradeTypes] = useState(defaultData);
 	
 	useEffect(() => {
-		client({method: 'GET', path: '/api/tradeTypes'}).then(response => {
-			setTradeTypes(response.entity._embedded.tradeTypes);
+		fetch('/tradeTypes', { method: 'GET', headers: {"Content-Type": "application/json"}})
+		.then(response => {
+			if (response.ok)
+				return response.json();
+			else
+				return response.json().then(err => { throw err });
+		}).then(tradeTypes => {
+			setTradeTypes(tradeTypes);
+		}).catch(err => {
+			setTradeTypes([]);
+			setErrors(err);
 		});
+
 	}, [getData]);
 	return tradeTypes;
 }
@@ -18,8 +27,17 @@ function useOrderTypes(getData, defaultData) {
 	const [orderTypes, setOrderTypes] = useState(defaultData);
 	
 	useEffect(() => {
-		client({method: 'GET', path: '/api/orderTypes'}).then(response => {
-			setOrderTypes(response.entity._embedded.orderTypes);
+		fetch('/orderTypes', { method: 'GET', headers: {"Content-Type": "application/json"}})
+		.then(response => {
+			if (response.ok)
+				return response.json();
+			else
+				return response.json().then(err => { throw err });
+		}).then(orderTypes => {
+			setOrderTypes(orderTypes);
+		}).catch(err => {
+			setOrderTypes([]);
+			setErrors(err);
 		});
 	}, [getData]);
 	return orderTypes;
