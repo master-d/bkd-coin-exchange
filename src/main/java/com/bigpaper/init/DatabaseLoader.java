@@ -16,14 +16,9 @@
 package com.bigpaper.init;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import com.bigpaper.bo.Asset;
 import com.bigpaper.bo.AssetType;
@@ -35,6 +30,10 @@ import com.bigpaper.repos.AssetTypeRepository;
 import com.bigpaper.repos.OrderTypeRepository;
 import com.bigpaper.repos.TradeTypeRepository;
 import com.bigpaper.repos.UserTradeRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Rob Richards
@@ -93,9 +92,10 @@ public class DatabaseLoader implements CommandLineRunner {
 		List<UserTrade> trades = toList(userTradeRepo.findAll());
 		if (trades.size() == 0) {
 			// save some random trades
-			for (int x=0; x<20; x++) {
+			for (int x=0; x<200; x++) {
 				UserTrade trade = new UserTrade("robr","ASK", "MARKET",1L,1L, new BigDecimal(100*Math.random()));
-				trade.setFillDate(LocalDateTime.now().minusMonths(x)); 
+				trade.setFillByTradeId(1L);
+				trade.setFillDate(LocalDateTime.now().minusMinutes((long)(5*525600*Math.random())));
 				userTradeRepo.save(trade);
 				
 			}

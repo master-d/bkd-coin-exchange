@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import com.bigpaper.bo.UserTrade;
 
@@ -17,10 +18,10 @@ import com.bigpaper.bo.UserTrade;
 public interface UserTradeRepository extends CrudRepository<UserTrade, Long> {
 
 	public List<UserTrade> findByFillDateGreaterThan(LocalDateTime date);
-	public List<UserTrade> findByAssetIdAndFillByTradeIdIsNotNullAndFillDateIsNotNull(Long assetId);
+	public List<UserTrade> findByAssetIdAndFillByTradeIdIsNotNullAndFillDateIsNotNull(@Param("assetId") Long assetId);
 	
 	public List<UserTrade> findByUserName(String userName);
-	public List<UserTrade> findByUserNameAndFillDateIsNullOrderByPostDateDesc(String userName);
+	public List<UserTrade> findByUserNameAndFillDateIsNullOrderByPostDateDesc(@Param("userName") String userName);
 	public List<UserTrade> findByUserNameAndFillDateIsNotNullOrderByPostDateDesc(String userName);
 
 	// current bid/ask price for asset

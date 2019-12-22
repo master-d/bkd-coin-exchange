@@ -26,13 +26,14 @@
     "react-dom": "^16.12.0",
     "react-icons": "*",
     "react-scripts": "*",
+    "reactstrap": "^8.2.0",
     "rest": "*",
     "typescript": "*"
   },
   "scripts": {
-  "watch": "webpack --watch -d",
-  "start": "webpack-dev-server",
-  "build": "webpack"
+    "watch": "webpack --watch -d",
+    "start": "webpack-dev-server",
+    "build": "webpack"
   },
   "devDependencies": {
     "@babel/core": "*",
