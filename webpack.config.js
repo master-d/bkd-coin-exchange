@@ -6,8 +6,8 @@ module.exports = {
     cache: true,
     mode: 'development',
     output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'frontend_dist')
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, './src/main/resources/static/dist')
     },
     devServer: {
         contentBase: './src/main/resources/static',

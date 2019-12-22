@@ -3,4 +3,4 @@
 /yarn.lock
 /package-lock.json
 /.settings
-/frontend_dist
+static/dist/

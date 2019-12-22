@@ -5,20 +5,19 @@ import ReactDOM  from 'react-dom';
 
 import Login from './comp/login';
 import CoinExchange from './comp/coin-exchange';
-import { AuthContext } from './context/auth-context';
+import { AuthContext, getStoredUserAuth } from './context/auth-context';
 
 const App = () => {
-	const { auth } = useContext("authContext");
-}
+	const auth =  getStoredUserAuth();
 
-ReactDOM.render(
-	<App>
-		<AuthContext.Provider>
-			<h1 style='color: white'>fuck it</h1>
+	return (
+		<AuthContext.Provider value={auth}>
 			{auth && auth.id ? <CoinExchange /> : <Login />}
 		</AuthContext.Provider>
-	</App>,
-	document.getElementById('react')
-)
+	)
+}
 
 export default App;
+
+ReactDOM.render(<App />, document.getElementById('react'));
+
