@@ -1,4 +1,8 @@
+
 body, html {
+ background: black;
+}
+.dark {
  background: black;
 }
 #main {
@@ -81,4 +85,8 @@ table.std thead tr {
  border: 1px solid #333;
  max-height: 156px;
  overflow-y: scroll;
+}
+
+.w200 {
+ width: 200px;
 }
