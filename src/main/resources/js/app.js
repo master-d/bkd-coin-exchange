@@ -1,20 +1,30 @@
 'use strict';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import ReactDOM  from 'react-dom';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Login from './comp/login';
 import CoinExchange from './comp/coin-exchange';
-import { AuthContext, getStoredUserAuth } from './context/auth-context';
+import { AuthContext, AuthProvider } from './context/auth-context';
+import { ErrorProvider } from './context/error-context';
 
+const isLoggedIn = () => {
+	const auth = useContext(AuthContext);
+	return auth.user && auth.user.email;
+}
+const Content = () => {
+	return isLoggedIn() ? <CoinExchange /> : <Login />
+	
+}
 const App = () => {
-	const auth =  getStoredUserAuth();
 
 	return (
-		<AuthContext.Provider value={auth}>
-			{auth && auth.id ? <CoinExchange /> : <Login />}
-		</AuthContext.Provider>
+		<AuthProvider>
+			<ErrorProvider>
+			<Content />
+			</ErrorProvider>
+		</AuthProvider>
 	)
 }
 

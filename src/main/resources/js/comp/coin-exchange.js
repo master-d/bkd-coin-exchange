@@ -1,9 +1,10 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReactDOM  from 'react-dom';
+import { Button } from 'reactstrap';
 
-
+import {AuthContext} from '../context/auth-context';
 import NavList, { NavItem } from './nav.js';
 import BidAskForm from './bidask-form.js';
 
@@ -14,6 +15,7 @@ ReactChartkick.addAdapter(Chart);
 
 const CoinExchange = () => {
 
+	const auth = useContext(AuthContext);
 	const [assets, setAssets] = useState([]);
 	const [selectedAsset, setSelectedAsset] = useState(null);
 	const [trades, setTrades] = useState([]);
@@ -79,6 +81,7 @@ const CoinExchange = () => {
 	);
 	return (
 		<div id="main" className="dark">
+			<Button onClick={ e => { auth.logout() }} style={{ "float": "right" }}>Logout</Button>
 			<h1>BKD Coin Exchange</h1>
 			<div className="content">
 			<div id="chart">

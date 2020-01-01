@@ -1,23 +1,30 @@
 import * as React from "react";
 
-const useAuthHandler = () => {
-  const [auth, setAuthState] = React.useState(null);
+const useAuth = () => {
 
-  const setAuth = (auth) => {
-    window.localStorage.setItem("auth", JSON.stringify(auth));
-    setAuthState(auth);
+  /** Return user auth from local storage value */
+  const getStoredUser = () => {
+    const user = window.localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
   };
 
-  const setUnauth = () => {
+  const [user, setUserState] = React.useState(getStoredUser());
+
+  const setUser = (newUser) => {
+    window.localStorage.setItem("user", JSON.stringify(newUser));
+    setUserState(newUser);
+  };
+
+  const logout = () => {
     window.localStorage.clear();
-    setAuthState(null);
+    setUserState(null);
   };
 
   return {
-    auth,
-    setAuth,
-    setUnauth
+    user,
+    setUser,
+    logout
   };
 };
 
-export default useAuthHandler;
+export default useAuth;

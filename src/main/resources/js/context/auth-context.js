@@ -1,32 +1,22 @@
 import * as React from "react";
 
 /** Custom Hooks */
-import useAuthHandler from "../hooks/auth-handler";
+import useAuth from "../hooks/auth-handler";
 
 
-/** Return user auth from local storage value */
-export const getStoredUserAuth = () => {
-  const auth = window.localStorage.getItem("UserAuth");
-  if (auth) {
-    return JSON.parse(auth);
-  }
-  return null;
-};
-
-export const AuthContext = React.createContext({
-  auth: null,
-  setAuth: () => {},
-  setUnauth: () => {}
+const AuthContext = React.createContext({
+  user: null,
+  setUser: () => {},
+  logout: () => {}
 });
+const { Provider } = AuthContext;
 
 function AuthProvider({children}) {
-  const { auth, setAuth, setUnauth } = useAuthHandler(
-    getStoredUserAuth()
-  );
+  const auth = useAuth();
   return (
-    <AuthContext.Provider value={auth, setAuth, setUnauth}>
+    <Provider value={auth}>
         {children}
-    </AuthContext.Provider>
+    </Provider>
   )
 }
-export {AuthProvider};
+export {AuthContext, AuthProvider};
