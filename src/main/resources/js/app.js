@@ -22,7 +22,7 @@ const App = () => {
 	return (
 		<AuthProvider>
 			<ErrorProvider>
-			<Content />
+				<Content />
 			</ErrorProvider>
 		</AuthProvider>
 	)
