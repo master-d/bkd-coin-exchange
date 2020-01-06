@@ -15,11 +15,17 @@ module.exports = {
         port: 8090,
         hot: true,
         watchContentBase: true,
-        "proxy": {
-            "/api": {
-              "target": "http://localhost:8080"
+        proxy: {
+            "/login": {
+              target: "http://[::1]:8080", secure: false, changeOrigin: true
+            },
+            "/register": {
+                target: "http://[::1]:8080", secure: false, changeOrigin: true
+            },
+            "/api/**": {
+                target: "http://[::1]:8080", secure: false, changeOrigin: true
             }
-          }        
+        }
     },
     module: {
         rules: [

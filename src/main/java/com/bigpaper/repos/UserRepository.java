@@ -9,4 +9,6 @@ import com.bigpaper.bo.User;
  */
 public interface UserRepository extends CrudRepository<User, String> {
 
+    public User findByEmail(String email);
+    public User findByEmailAndPassword(String email, String password);
 }

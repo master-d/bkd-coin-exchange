@@ -33,7 +33,7 @@
   },
   "scripts": {
     "watch": "webpack --watch -d",
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --inline --hot --history-api-fallback",
     "build": "webpack"
   },
   "devDependencies": {

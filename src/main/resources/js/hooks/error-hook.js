@@ -26,7 +26,7 @@ const useErrors = () => {
     }
 
     return {
-      errors, addError, removeError, clearErrors, hasErrors
+      errors, setErrors, addError, removeError, clearErrors, hasErrors
     }
 }
 export default useErrors;

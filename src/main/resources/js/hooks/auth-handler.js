@@ -5,7 +5,11 @@ const useAuth = () => {
   /** Return user auth from local storage value */
   const getStoredUser = () => {
     const user = window.localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
+    try {
+      return JSON.parse(user);
+    } catch(err) {
+      return null;
+    }
   };
 
   const [user, setUserState] = React.useState(getStoredUser());

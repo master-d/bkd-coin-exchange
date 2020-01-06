@@ -16,18 +16,22 @@ function Login() {
 
   const validateLoginForm = () => {
     var valid = true;
+    var errors = [];
     if (!input.email || !input.email.match(/^\w+@\w+\.\w{2,4}$/))
-      errCtx.addError("invalid email"), valid = false;
+      errors.push({ message: "invalid email", severity: "danger"}), valid = false;
     if (!input.password) 
-      errCtx.addError("password required"), valid = false;
+      errors.push({ message: "password required", severity: "danger"}), valid = false;
     if (registering) {
+      if (!input.userName) 
+        errors.push({ message: "User Name is required", severity: "danger"}), valid = false;
       if (input.password != input.cpassword) 
-        errCtx.addError("passwords do not match"), valid = false;
-      if (!input.first_name) 
-        errCtx.addError("first name is required"), valid = false;
-      if (!input.last_name) 
-        errCtx.addError("last name is required"), valid = false;
+        errors.push({ message: "passwords do not match", severity: "danger"}), valid = false;
+      if (!input.firstName) 
+        errors.push({ message: "first name is required", severity: "warning"}), valid = false;
+      if (!input.lastName) 
+        errors.push({ message: "last name is required", severity: "danger"}), valid = false;
     }
+    errCtx.setErrors(errors);
     return valid;
   }
   const handleChange = (e) => {
@@ -37,24 +41,33 @@ function Login() {
   }
   const authHandler = () => {
     setLoading(true);
-    const vinput = {...input};
-    auth.setUser(vinput);
-  };
-  const register = () => {
-    auth.setUser(input);
-    /*
-    fetch('/orderTypes', { method: 'POST', body: input, headers: {"Content-Type": "application/json"}})
+    fetch('/login', { method: 'POST', body: JSON.stringify(input), headers: {"Content-Type": "application/json"}})
 		.then(response => {
+      setLoading(false);
 			if (response.ok)
 				return response.json();
 			else
-				return response.json().then(err => { throw err });
+				response.text().then(err => {throw err});
+		}).then(registeredUser => {
+      auth.setUser(registeredUser);
+		}).catch(err => {
+			errCtx.addError(err);
+		});
+  };
+  const register = () => {
+    setLoading(true);
+    fetch('/register', { method: 'POST', body: JSON.stringify(input), headers: {"Content-Type": "application/json"}})
+		.then(response => {
+      setLoading(false);
+			if (response.ok)
+				return response.json();
+			else
+        response.text().then(err => {throw err});
 		}).then(registeredUser => {
       auth.setAuth(registeredUser);
 		}).catch(err => {
-			setErrors(err);
+			errCtx.addError(err);
 		});
-*/
   }
 
   return (
@@ -104,17 +117,25 @@ function Login() {
           <FormGroup>
             <Input
               type="text"
-              name="first_name"
-              placeholder="First Name"
-              onChange={handleChange} value={input.first_name}
+              name="userName"
+              placeholder="User Name"
+              onChange={handleChange} value={input.userName}
             />
           </FormGroup>
           <FormGroup>
             <Input
               type="text"
-              name="last_name" 
+              name="firstName"
+              placeholder="First Name"
+              onChange={handleChange} value={input.firstName}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              type="text"
+              name="lastName" 
               placeholder="Last Name"
-              onChange={handleChange} value={input.last_name}
+              onChange={handleChange} value={input.lastName}
             />
           </FormGroup>
           <FormGroup>

@@ -1,26 +1,41 @@
 import React, { useContext, useState, useEffect } from "react"
 import { ErrorContext } from "../context/error-context"
-import {Card, CardHeader } from 'reactstrap'
+import {Card, CardHeader, CardText, CardBody, Badge, CardTitle } from 'reactstrap'
 
 
 const Errors = () => {
     const errorCtx = useContext(ErrorContext);
+    const [timer,setTimer] = useState();
+
+    const startTimer = () => {
+        setTimer(setTimeout(() => { errorCtx.clearErrors() }, 5000));
+    }
+    const stopTimer = () => {
+        if (timer) 
+            clearTimeout(timer);
+    }
+    useEffect(() => {
+        if (errorCtx.errors && errorCtx.errors.length)
+            startTimer();
+    },[errorCtx.errors]);
 
     const Error = (props) => {
-        useEffect(() => {
-            const timer = setTimeout(() => { errorCtx.removeError(props.idx) }, 5000);
-            return () => clearTimeout(timer)
-        },[]);
         return (
-            <Card color={props.error.severity}>{props.idx} {props.error.message}</Card>
+            <div>
+                <Badge  color={props.error.severity}>{props.error.message}</Badge>
+            </div>
         )
     }
     const errors = errorCtx.errors.map((error, idx) => error && error.message ? <Error error={error} idx={idx} key={idx} /> : null);
 
     return (
-        <Card body inverse color="info" hidden={!errorCtx.hasErrors()}> 
-            {errors}
-        </Card> 
+        <Card color="dark" onMouseOver={stopTimer} onMouseOut={startTimer} onClick={errorCtx.clearErrors} 
+        style={{ position: "absolute"}} hidden={!errorCtx.hasErrors()}>
+            <CardBody>
+                <CardTitle>This Happened</CardTitle>
+                {errors}
+            </CardBody>
+        </Card>
     )
 }
 
