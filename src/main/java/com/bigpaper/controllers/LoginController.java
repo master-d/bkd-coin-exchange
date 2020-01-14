@@ -4,12 +4,10 @@ import javax.annotation.security.PermitAll;
 
 import com.bigpaper.bo.User;
 import com.bigpaper.services.LoginService;
-import com.bigpaper.util.JwtUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +27,7 @@ public class LoginController {
 	@PermitAll
 	@ResponseBody
 	@PostMapping(value = "/register")
-	public ResponseEntity<?> registerUser(@RequestBody User user) {
+	public ResponseEntity<?> registerUser(@RequestBody User user) throws JsonProcessingException {
 		String password = user.getPassword();
 		User regUser = loginService.registerUser(user);
 		regUser = loginService.loginUser(user.getEmail(), password);
@@ -39,7 +37,7 @@ public class LoginController {
 	@PermitAll
 	@ResponseBody
 	@PostMapping(value = "/login")
-	public ResponseEntity<?> login(@RequestBody User user) {
+	public ResponseEntity<?> login(@RequestBody User user) throws JsonProcessingException {
 //		authMgr.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
 		user = loginService.loginUser(user.getEmail(), user.getPassword());
 		return ResponseEntity.ok().body(user);

@@ -10,12 +10,17 @@ import BidAskForm from './bidask-form.js';
 
 import ReactChartkick, { LineChart } from 'react-chartkick';
 import Chart from 'chart.js';
+import Errors from "./errors";
+import { ErrorContext } from "../context/error-context";
+
+
 ReactChartkick.addAdapter(Chart);
 
 
 const CoinExchange = () => {
 
 	const auth = useContext(AuthContext);
+	const errCtx = useContext(ErrorContext);
 	const [assets, setAssets] = useState([]);
 	const [selectedAsset, setSelectedAsset] = useState(null);
 	const [trades, setTrades] = useState([]);
@@ -40,7 +45,7 @@ const CoinExchange = () => {
 				setSelectedAsset(data[0]);
 			}
 		}).catch(response => {
-			setErrors(response);
+			errCtx.addError(response);
 		});
 	}, [assetUrl]);
 	
@@ -56,7 +61,7 @@ const CoinExchange = () => {
 				var chartdata = response.entity._embedded.userTrades;
 				setTrades(chartdata.map(t => [new Date(t.fillDate),t.price]));
 			}).catch(response => {
-				setErrors(response);
+				errCtx.addError(response);
 			});
 		}
 	}, [selectedAsset]);
@@ -81,6 +86,7 @@ const CoinExchange = () => {
 	);
 	return (
 		<div id="main" className="dark">
+			<Errors/>
 			<Button onClick={ e => { auth.logout() }} style={{ "float": "right" }}>Logout</Button>
 			<h1>BKD Coin Exchange</h1>
 			<div className="content">

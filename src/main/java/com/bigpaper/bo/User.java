@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -16,13 +17,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class User {
 
 	private @Id @Column(length=25,unique=true,nullable=false) String userName;
-	private @Column(length=100,unique=true,nullable=false) String password;
+	private @JsonIgnore @Column(length=100,unique=true,nullable=false) String password;
 	private @Column(length=100,unique=true,nullable=true) String salt;
 	
 	private @Column(length=25,unique=false,nullable=true) String firstName;
 	private @Column(length=25,unique=false,nullable=true) String lastName;
 	private @Column(length=50,unique=true,nullable=false) String email;
-	private @Column(length=50,unique=true,nullable=false) Long phone;
+	private @Column(length=50,unique=true,nullable=true) Long phone;
 
 	private String jwt;
 

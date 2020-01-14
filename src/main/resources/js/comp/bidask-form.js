@@ -2,22 +2,32 @@
 import React, {useState, useEffect, useContext, createContext} from 'react';
 import { FaBitcoin, FaComments, FaCommentsDollar, FaDollarSign, FaChartLine } from 'react-icons/fa';
 import UserTrades from './user-trades.js';
+import FetchOptions from "../conf/fetch-options";
+import { AuthContext } from '../context/auth-context.js';
+import Errors from "./errors";
+import { ErrorContext } from "../context/error-context";
+
 
 function useTradeTypes(getData, defaultData) {
+	const auth = useContext(AuthContext);
+	const errCtx = React.useContext(ErrorContext);
+
 	const [tradeTypes, setTradeTypes] = useState(defaultData);
-	
+	const getOptions = FetchOptions('GET');
+
 	useEffect(() => {
-		fetch('/tradeTypes', { method: 'GET', headers: {"Content-Type": "application/json"}})
+//		fetch('/api/tradeTypes', { method: 'GET', headers: {addError 'Content-Type': 'application/json', 'Authorization': "Bearer " + auth.user.jwt}} )
+		fetch('/api/tradeTypes', { ...getOptions })
 		.then(response => {
 			if (response.ok)
 				return response.json();
 			else
-				return response.json().then(err => { throw err });
+				throw Error(response.statusText);
 		}).then(tradeTypes => {
 			setTradeTypes(tradeTypes);
 		}).catch(err => {
 			setTradeTypes([]);
-			setErrors(err);
+			errCtx.addError(err);
 		});
 
 	}, [getData]);
@@ -25,49 +35,51 @@ function useTradeTypes(getData, defaultData) {
 }
 function useOrderTypes(getData, defaultData) {
 	const [orderTypes, setOrderTypes] = useState(defaultData);
+	const getOptions = FetchOptions('GET');
+	const errCtx = React.useContext(ErrorContext);
 	
 	useEffect(() => {
-		fetch('/orderTypes', { method: 'GET', headers: {"Content-Type": "application/json"}})
+		fetch('/orderTypes', { ...getOptions })
 		.then(response => {
 			if (response.ok)
 				return response.json();
 			else
-				return response.json().then(err => { throw err });
+				throw Error(response.statusText);
 		}).then(orderTypes => {
 			setOrderTypes(orderTypes);
 		}).catch(err => {
 			setOrderTypes([]);
-			setErrors(err);
+			errCtx.addError(err);
 		});
 	}, [getData]);
 	return orderTypes;
 }
 
-const BidAskForm = (props) => {
-	
+const BidAskForm = (props) => {	
 	const tradeTypes = useTradeTypes(null,[]);
 	const [selectedTradeType, setSelectedTradeType] = useState("ASK");
 	const orderTypes = useOrderTypes(null,[]);
 	const [selectedOrderType, setSelectedOrderType] = useState("LIMIT");
 	const [selectedAsset, setSelectedAsset] = useState(1);
-	const [errors, setErrors] = useState(null);
+	const [errors, addError] = useState(null);
 	const [refreshTrades, setRefreshTrades] = useState(false);
 	const [marketValue, setMarketValue] = useState(null);
+	const getOptions = FetchOptions('GET');
 	
 	useEffect(() => {
 		// go get the current market value and display it for the user
 		if (selectedOrderType == "MARKET") {
-			fetch('/trades/market/' + selectedTradeType + "/" + selectedAsset, { method: 'GET' })
+			fetch('/trades/market/' + selectedTradeType + "/" + selectedAsset, { ...getOptions })
 			.then(response => {
 				if (response.ok)
 					return response.json();
 				else
-					return response.json().then(err => { throw err });
+					throw Error(response.statusText);
 			}).then(trade => {
 				setMarketValue(trade);
 			}).catch(err => {
 				setMarketValue(null);
-				setErrors(err);
+				errCtx.addError(err);
 			});
 		}
 	}, [selectedAsset,selectedOrderType,selectedTradeType]);
@@ -81,16 +93,16 @@ const BidAskForm = (props) => {
 				value = +value;
 			data[key] = value;
 		});
-		fetch('/trades', { method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+		fetch('/trades', { ...FetchOptions('POST'), body: JSON.stringify(data) })
 		.then(response => {
 			if (response.ok)
 				return response.json();
 			else
-				throw Error(response);
+				throw Error(response.statusText);
 		}).then(response => {
 			setRefreshTrades(true);
 		}).catch(response => {
-			setErrors(response);
+			errCtx.addError(err);
 		});
 	}
 	function tradeTypeChange(e) {
@@ -118,6 +130,7 @@ const BidAskForm = (props) => {
 	);
 		return (
 			<div id="bidaskform" className="container" style={{display: "none"}}>
+	        <Errors/>
 			<UserTrades refresh={refreshTrades}/>
 			<h4>Order</h4>
 			<form id="bidask-form" onSubmit={ handleSubmit }>

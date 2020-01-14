@@ -26,7 +26,9 @@ const Errors = () => {
             </div>
         )
     }
-    const errors = errorCtx.errors.map((error, idx) => error && error.message ? <Error error={error} idx={idx} key={idx} /> : null);
+    var errors = null;
+    if (errorCtx.errors)
+        errors = errorCtx.errors.map((error, idx) => error && error.message ? <Error error={error} idx={idx} key={idx} /> : null);
 
     return (
         <Card color="dark" onMouseOver={stopTimer} onMouseOut={startTimer} onClick={errorCtx.clearErrors} 

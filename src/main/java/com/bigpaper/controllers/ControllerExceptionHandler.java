@@ -12,10 +12,12 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(value=BkdCoinException.class)
     public ResponseEntity<Object> handleBkdCoinException(BkdCoinException ex) {
+        ex.printStackTrace();
         return new ResponseEntity<>(ex.getServerMessage(),ex.getStatus());
     }
     @ExceptionHandler(value=RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        ex.printStackTrace();
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bigpaper.beans.ServerMessage;
@@ -26,6 +27,7 @@ import com.bigpaper.services.TradeService;
 // tag::code[]
 
 @Controller
+@RequestMapping("/api")
 public class TradeController {
 
 	@Autowired
@@ -53,7 +55,6 @@ public class TradeController {
 	@ResponseBody
 	@PostMapping(value="/trades", produces="application/json")
 	public UserTrade processTrade(@RequestBody UserTrade trade) {
-		trade.setUserName("robr");
 		trade.setPostDate(LocalDateTime.now());
 		trade = tradeService.processTrade(trade);
 		//UserTrade savedTrade = tradeRepo.save(trade);

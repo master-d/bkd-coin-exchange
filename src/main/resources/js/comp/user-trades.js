@@ -2,6 +2,8 @@
 import React, {useState, useEffect, useContext, createContext} from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import DateFmt from './date-fmt.js';
+import { AuthContext } from '../context/auth-context.js';
+import { ErrorContext } from '../context/error-context.js';
 
 const tradeOpts = [
 	{ val: "open", text: "Unfilled Trades", url: "/api/userTrades/search/findByUserNameAndFillDateIsNullOrderByPostDateDesc?userName="}, 
@@ -10,8 +12,9 @@ const tradeOpts = [
 ]
 
 const UserTrades = (props) => {
-	const userName = 'robr';
 	//const trades = useUserTrades(tradeOpts[0].url, userName, []);
+	const auth = useContext(AuthContext);
+	const errCtx = useContext(ErrorContext);
 	const [refreshTrades, setRefreshTrades] = useState(true);
 	const [existingTradeType, setExistingTradeType] = useState(tradeOpts[0]);
 	const [userTrades, setUserTrades] = useState([]);
@@ -22,18 +25,19 @@ const UserTrades = (props) => {
 	useEffect(() => {
 		if (refreshTrades) {
 			const url = existingTradeType.url;
-			fetch(url + userName, { method: 'GET', headers: {"Content-Type": "application/json"}})
+			fetch(url + auth.user.userName, { method: 'GET', headers: {"Content-Type": "application/json"}})
 			.then(response => {
 				if (response.ok)
 					return response.json();
 				else
 					return response.json().then(err => { throw err });
-			}).then(userTrades => {
-				setUserTrades(userTrades);
+			}).then(response => {
+				const data = response._embedded.userTrades;
+				setUserTrades(data);
 				setRefreshTrades(false);
 			}).catch(err => {
 				setUserTrades([]);
-				setErrors(err);
+				errCtx.addError(err);
 			});	
 		}
 	}, [refreshTrades]);

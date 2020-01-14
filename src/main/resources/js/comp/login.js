@@ -5,6 +5,7 @@ import { Button, Form, FormGroup, Input, Col, Card, CardHeader, ButtonGroup } fr
 import { AuthContext } from "../context/auth-context";
 import Errors from "./errors";
 import { ErrorContext } from "../context/error-context";
+import FetchOptions from "../conf/fetch-options";
 
 function Login() {
   const auth = React.useContext(AuthContext);
@@ -13,6 +14,7 @@ function Login() {
   const [input, setInput] = React.useState(user);
   const [loading, setLoading] = React.useState(false);
   const [registering, setRegistering] = React.useState(false);
+  const postOptions = FetchOptions('POST');
 
   const validateLoginForm = () => {
     var valid = true;
@@ -41,13 +43,13 @@ function Login() {
   }
   const authHandler = () => {
     setLoading(true);
-    fetch('/login', { method: 'POST', body: JSON.stringify(input), headers: {"Content-Type": "application/json"}})
+    fetch('/login', { ...postOptions, body: JSON.stringify(input) })
 		.then(response => {
       setLoading(false);
 			if (response.ok)
 				return response.json();
 			else
-				response.text().then(err => {throw err});
+				throw response.text();
 		}).then(registeredUser => {
       auth.setUser(registeredUser);
 		}).catch(err => {
@@ -56,13 +58,13 @@ function Login() {
   };
   const register = () => {
     setLoading(true);
-    fetch('/register', { method: 'POST', body: JSON.stringify(input), headers: {"Content-Type": "application/json"}})
+    fetch('/register', { ...postOptions, body: JSON.stringify(input) })
 		.then(response => {
       setLoading(false);
 			if (response.ok)
 				return response.json();
 			else
-        response.text().then(err => {throw err});
+        throw response.text();
 		}).then(registeredUser => {
       auth.setAuth(registeredUser);
 		}).catch(err => {
